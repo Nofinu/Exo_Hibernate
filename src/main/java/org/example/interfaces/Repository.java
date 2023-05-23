@@ -4,6 +4,9 @@ import java.util.List;
 
 public interface Repository<T> {
 
+    void begin();
+    void end();
+
     boolean create(T o);
 
     boolean update(T o);

@@ -1,8 +1,10 @@
 package org.example.Util;
 
+import org.example.Classes.Produit;
 import org.example.services.ProduitService;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 public class IHM {
@@ -11,6 +13,7 @@ public class IHM {
 
     public IHM() {
         produitService = new ProduitService();
+        produitService.begin();
         scanner = new Scanner(System.in);
     }
 
@@ -31,6 +34,9 @@ public class IHM {
                 case 6:
                     findByDate();
                     break;
+                case 7:
+                    findByQuantityAction();
+                    break;
                 case 0:
                     break;
                 default:
@@ -38,6 +44,7 @@ public class IHM {
                     break;
             }
         } while (entry != 0);
+        produitService.end();
     }
 
     private void menu() {
@@ -45,6 +52,7 @@ public class IHM {
         System.out.println("4-- afficher tout les produits");
         System.out.println("5-- afficher les produit supperieur a une somme");
         System.out.println("6-- afficher les produit entre 2 dates");
+        System.out.println("7-- afficher l'id et la reference des produit au dessous d'un seuille de stock");
     }
 
     private void findAllAction() {
@@ -67,5 +75,17 @@ public class IHM {
         System.out.println("date de fin (yyyy/MM/dd):");
         String dateEnd = scanner.nextLine();
         produitService.findBetweenDate(new Date(dateStart), new Date(dateEnd)).forEach(System.out::println);
+    }
+
+    private void findByQuantityAction (){
+        System.out.println("------------ affichage par quantité ---------");
+        System.out.println("quantité en dessous de la quelle on affichera les produits :");
+        int quantity = scanner.nextInt();
+        scanner.nextLine();
+
+        List<Produit> produitList = produitService.findByQuantity(quantity);
+        for (Produit p: produitList) {
+            System.out.println("id : "+p.getId()+"/ reference : "+p.getReference());
+        }
     }
 }

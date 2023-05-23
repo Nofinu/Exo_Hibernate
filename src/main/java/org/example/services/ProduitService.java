@@ -15,8 +15,18 @@ public class ProduitService extends BaseService implements Repository<Produit> {
     }
 
     @Override
-    public boolean create(Produit o) {
+    public void begin() {
         session = sessionFactory.openSession();
+    }
+
+    @Override
+    public void end() {
+        session.close();
+        sessionFactory.close();
+    }
+
+    @Override
+    public boolean create(Produit o) {
         session.beginTransaction();
         session.save(o);
         session.getTransaction().commit();
@@ -25,7 +35,6 @@ public class ProduitService extends BaseService implements Repository<Produit> {
 
     @Override
     public boolean update(Produit o) {
-        session = sessionFactory.openSession();
         session.beginTransaction();
         session.update(o);
         session.getTransaction().commit();
@@ -34,7 +43,6 @@ public class ProduitService extends BaseService implements Repository<Produit> {
 
     @Override
     public boolean delete(Produit o) {
-        session = sessionFactory.openSession();
         session.beginTransaction();
         session.delete(o);
         session.getTransaction().commit();
@@ -44,40 +52,39 @@ public class ProduitService extends BaseService implements Repository<Produit> {
     @Override
     public Produit findById(int id) {
         Produit produit = null;
-        session = sessionFactory.openSession();
         produit = (Produit) session.get(Produit.class, id);
-        session.close();
         return produit;
     }
 
     @Override
     public List<Produit> findAll() {
         List<Produit> produits = null;
-        session = sessionFactory.openSession();
         produits = session.createQuery("from Produit", Produit.class).list();
-        session.close();
         return produits;
 
     }
 
     public List<Produit> findByPrice (Double price){
         List<Produit> produits = null;
-        session= sessionFactory.openSession();
         Query<Produit> produitQuery = session.createQuery("from Produit where prix>:price", Produit.class);
         produitQuery.setParameter("price",price);
         produits = produitQuery.list();
-        session.close();
         return produits;
     }
 
     public List<Produit> findBetweenDate (Date dateStart,Date dateEnd){
         List<Produit> produits = null;
-        session = sessionFactory.openSession();
         Query<Produit> produitQuery = session.createQuery("from Produit where dateAchat between :dateStart and :dateEnd", Produit.class);
         produitQuery.setParameter("dateStart",dateStart);
         produitQuery.setParameter("dateEnd",dateEnd);
         produits = produitQuery.list();
-        session.close();
         return produits;
+    }
+
+    public List<Produit> findByQuantity (int quantity){
+        List<Produit> produits = null;
+        Query<Produit> queryProduits= session.createQuery("from Produit where stock < :quantity",Produit.class);
+        queryProduits.setParameter("quantity",quantity);
+        return produits = queryProduits.list();
     }
 }
