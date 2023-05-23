@@ -62,34 +62,25 @@ public class ProduitService extends BaseService implements Repository<Produit> {
 
     @Override
     public Produit findById(int id) {
-        Produit produit = null;
-        produit = (Produit) session.get(Produit.class, id);
-        return produit;
+        return (Produit) session.get(Produit.class, id);
     }
 
     @Override
     public List<Produit> findAll() {
-        List<Produit> produits = null;
-        produits = session.createQuery("from Produit", Produit.class).list();
-        return produits;
-
+        return session.createQuery("from Produit", Produit.class).list();
     }
 
     public List<Produit> findByPrice(Double price) {
-        List<Produit> produits = null;
         Query<Produit> produitQuery = session.createQuery("from Produit where prix>:price", Produit.class);
         produitQuery.setParameter("price", price);
-        produits = produitQuery.list();
-        return produits;
+        return  produitQuery.list();
     }
 
     public List<Produit> findBetweenDate(Date dateStart, Date dateEnd) {
-        List<Produit> produits = null;
         Query<Produit> produitQuery = session.createQuery("from Produit where dateAchat between :dateStart and :dateEnd", Produit.class);
         produitQuery.setParameter("dateStart", dateStart);
         produitQuery.setParameter("dateEnd", dateEnd);
-        produits = produitQuery.list();
-        return produits;
+        return produitQuery.list();
     }
 
     public List<Produit> findByQuantity(int quantity) {
@@ -99,16 +90,13 @@ public class ProduitService extends BaseService implements Repository<Produit> {
     }
 
     public Long stockValueByBrand(String brand) {
-        Long stockValue = 0L;
-        Query<Long> queryStock = session.createQuery("select sum (stock) from Produit as p where p.marque = :brand");
+        Query queryStock = session.createQuery("select sum (stock) from Produit as p where p.marque = :brand");
         queryStock.setParameter("brand", brand);
-        stockValue =(Long)  queryStock.uniqueResult();
-        return stockValue;
+        return (Long)  queryStock.uniqueResult();
     }
 
     public Double meanPrice() {
-        Double meanPrice =(Double) session.createQuery("select avg(prix) from Produit as p ").uniqueResult();
-        return meanPrice;
+        return (Double) session.createQuery("select avg(prix) from Produit as p ").uniqueResult();
     }
 
     public List<Produit> findByBrand(String brand) {
