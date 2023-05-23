@@ -42,12 +42,23 @@ public class ProduitService extends BaseService implements Repository<Produit> {
     }
 
     @Override
-    public boolean delete(Produit o) {
+    public boolean delete(int id) {
+        session.beginTransaction();
+        Produit p = session.get(Produit.class,id);
+        if(p != null){
+            session.delete(p);
+            session.getTransaction().commit();
+            return true;
+        }
+        return false;
+    }
+/*
+    public boolean delete2(Produit o) {
         session.beginTransaction();
         session.delete(o);
         session.getTransaction().commit();
         return true;
-    }
+    }*/
 
     @Override
     public Produit findById(int id) {

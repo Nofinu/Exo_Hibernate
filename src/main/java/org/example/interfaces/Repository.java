@@ -11,7 +11,7 @@ public interface Repository<T> {
 
     boolean update(T o);
 
-    boolean delete(T o);
+    boolean delete(int id);
 
     T findById(int id);
 
