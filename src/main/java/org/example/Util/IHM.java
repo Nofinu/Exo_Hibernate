@@ -46,9 +46,18 @@ public class IHM {
                 case 7:
                     findByQuantityAction();
                     break;
-          /*      case 8:
-                    deletetest();
-                    break;*/
+                case 8:
+                    stockByBrandAction();
+                    break;
+                case 9:
+                    meanPriceAction();
+                    break;
+                case 10:
+                    findByBrandAction();
+                    break;
+                case 11:
+                    deleteByBrandAction();
+                    break;
                 case 0:
                     break;
                 default:
@@ -68,6 +77,10 @@ public class IHM {
         System.out.println("5-- afficher les produit supperieur a une somme");
         System.out.println("6-- afficher les produit entre 2 dates");
         System.out.println("7-- afficher l'id et la reference des produit au dessous d'un seuille de stock");
+        System.out.println("8-- stock par marque");
+        System.out.println("9-- prix moyen des article");
+        System.out.println("10-- liste d'article par marque");
+        System.out.println("11-- suppresion par marque");
     }
 
     private void addProductAction (){
@@ -162,6 +175,35 @@ public class IHM {
         List<Produit> produitList = produitService.findByQuantity(quantity);
         for (Produit p: produitList) {
             System.out.println("id : "+p.getId()+"/ reference : "+p.getReference());
+        }
+    }
+
+    private void stockByBrandAction (){
+        System.out.println("--------affichage du stock par marque----------");
+        System.out.println("marque :");
+        String brand = scanner.nextLine();
+        System.out.println(produitService.stockValueByBrand(brand));
+    }
+
+    private void meanPriceAction (){
+        System.out.println(produitService.meanPrice());
+    }
+
+    private void findByBrandAction (){
+        System.out.println("--------affichage du stock par marque----------");
+        System.out.println("marque :");
+        String brand = scanner.nextLine();
+        produitService.findByBrand(brand).forEach(System.out::println);
+    }
+
+    private void deleteByBrandAction (){
+        System.out.println("--------affichage du stock par marque----------");
+        System.out.println("marque :");
+        String brand = scanner.nextLine();
+        if(produitService.deleteByBrand(brand)){
+            System.out.println("produits suprimé");
+        }else{
+            System.out.println("erreure lors de la suppresion");
         }
     }
 /*
