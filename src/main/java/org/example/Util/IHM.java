@@ -58,6 +58,9 @@ public class IHM {
                 case 11:
                     deleteByBrandAction();
                     break;
+                case 12:
+                    findValueByBrandAction();
+                    break;
                 case 0:
                     break;
                 default:
@@ -81,6 +84,7 @@ public class IHM {
         System.out.println("9-- prix moyen des article");
         System.out.println("10-- liste d'article par marque");
         System.out.println("11-- suppresion par marque");
+        System.out.println("12-- afficher le prix total du stock d'une marque");
     }
 
     private void addProductAction (){
@@ -205,6 +209,13 @@ public class IHM {
         }else{
             System.out.println("erreure lors de la suppresion");
         }
+    }
+
+    private void findValueByBrandAction (){
+        System.out.println("--------affichage du stock par marque----------");
+        System.out.println("marque :");
+        String brand = scanner.nextLine();
+        System.out.println(produitService.findValueByBrand(brand));
     }
 /*
     private void deletetest (){

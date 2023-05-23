@@ -94,10 +94,9 @@ public class ProduitService extends BaseService implements Repository<Produit> {
     }
 
     public List<Produit> findByQuantity(int quantity) {
-        List<Produit> produits = null;
         Query<Produit> queryProduits = session.createQuery("from Produit where stock < :quantity", Produit.class);
         queryProduits.setParameter("quantity", quantity);
-        return produits = queryProduits.list();
+        return queryProduits.list();
     }
 
     public Long stockValueByBrand(String brand) {
@@ -114,10 +113,9 @@ public class ProduitService extends BaseService implements Repository<Produit> {
     }
 
     public List<Produit> findByBrand(String brand) {
-        List<Produit> produits = null;
         Query<Produit> queryProduits = session.createQuery("from Produit as p where p.marque = :brand",Produit.class);
         queryProduits.setParameter("brand", brand);
-        return produits = queryProduits.list();
+        return queryProduits.list();
     }
 
     public boolean deleteByBrand (String brand){
@@ -127,5 +125,10 @@ public class ProduitService extends BaseService implements Repository<Produit> {
         int result = deleteQuery.executeUpdate();
         session.getTransaction().commit();
         return result >= 1;
+    }
+    public Double findValueByBrand (String brand){
+        Query<Double> queryStock = session.createQuery("select sum (stock*prix) from Produit as p where p.marque = :brand");
+        queryStock.setParameter("brand", brand);
+        return (Double) queryStock.uniqueResult();
     }
 }
