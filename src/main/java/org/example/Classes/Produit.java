@@ -1,7 +1,7 @@
 package org.example.Classes;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+
 import java.util.Date;
 
 @Entity

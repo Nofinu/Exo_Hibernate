@@ -4,7 +4,6 @@ import org.example.Classes.Produit;
 import org.example.interfaces.Repository;
 import org.hibernate.query.Query;
 
-import java.nio.channels.FileLock;
 import java.util.Date;
 import java.util.List;
 
