@@ -1,48 +1,51 @@
 package org.example;
 
-import Classes.Produit;
+import org.example.Classes.Produit;
+import org.example.services.ProduitService;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {
         StandardServiceRegistry registre = new StandardServiceRegistryBuilder().configure().build();
         SessionFactory sessionFactory = new MetadataSources(registre).buildMetadata().buildSessionFactory();
 
-        Produit produit1 = new Produit("marque1","reference1", LocalDate.now(),01.05D,200);
-        Produit produit2 = new Produit("marque2","reference2", LocalDate.now(),21.05D,20);
-        Produit produit3 = new Produit("marque3","reference3", LocalDate.now(),200.05D,10);
-        Produit produit4 = new Produit("marque4","reference4", LocalDate.now(),10D,50);
-        Produit produit5 = new Produit("marque5","reference5", LocalDate.now(),55.25D,150);
+       /* ProduitService ps = new ProduitService();
+        ps.create(new Produit("produit1","zzaa123",new Date("2016/01/08"),250D,6000));
+        ps.create(new Produit("produit2","EER678",new Date("2016/02/09"),250D,2000));
+        ps.create(new Produit("produit3","AQWZSX",new Date("2016/09/23"),250D,6000));
+        ps.create(new Produit("produit4","AZERTY",new Date("2016/02/12"),250D,6000));
+        ps.create(new Produit("produit5","qsdERT",new Date("2016/02/02"),250D,6000));
 
-        Session session = sessionFactory.openSession();
-        session.getTransaction().begin();
-        session.save(produit1);
-        session.save(produit2);
-        session.save(produit3);
-        session.save(produit4);
-        session.save(produit5);
-        session.getTransaction().commit();
+        // Informations produit id = 2
 
-        System.out.println(session.load(Produit.class,2));
+        Produit p = ps.findById(2);
+        System.out.println(p);
 
-        session.getTransaction().begin();
-        Produit productFind = session.load(Produit.class,3);
-        session.delete(productFind);
-        session.getTransaction().commit();
+        // Supprimer le produit id = 3
+        ps.delete(ps.findById(3));
 
-        session.getTransaction().begin();
-        Produit productEdit = session.load(Produit.class,1);
-        productEdit.setMarque("marquemodif");
-        session.update(productEdit);
-        session.getTransaction().commit();
+        // Modifier produit id = 1
 
-        session.close();
-        sessionFactory.close();
+        p = ps.findById(1);
+        if(p != null){
+            p.setMarque("HP");
+            p.setReference("MMMMPPP");
+            p.setDateAchat(new Date("2015/09/08"));
+            p.setPrix(5000D);
+            ps.update(p);
+        }*/
+
+        ProduitService produitService = new ProduitService();
+        produitService.findAll().forEach(System.out::println);
+
+        produitService.findByPrice(100D).forEach(System.out::println);
+
+        produitService.findBetweenDate(new Date("2016/01/08"),new Date("2023/01/08")).forEach(System.out::println);
     }
 }
