@@ -6,10 +6,7 @@ import org.example.Classes.Produit;
 import org.example.interfaces.Repository;
 import org.hibernate.query.Query;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 public class ProduitService extends BaseService implements Repository<Produit> {
@@ -68,14 +65,6 @@ public class ProduitService extends BaseService implements Repository<Produit> {
         }
         return false;
     }
-/*
-    public boolean delete2(Produit o) {
-        session.beginTransaction();
-        session.delete(o);
-        session.getTransaction().commit();
-        return true;
-    }*/
-
     @Override
     public Produit findById(int id) {
         return session.get(Produit.class, id);
@@ -142,9 +131,11 @@ public class ProduitService extends BaseService implements Repository<Produit> {
     }
 
     public List<Produit> findBynote (int note){
-        System.out.println(note);
-        Query<Produit> produitQuery = session.createQuery("From Produit where Commentaire.note>= ?1", Produit.class);
-        produitQuery.setParameter(1,note);
+        Query<Integer> idProduit = session.createQuery("select c.produit.id from Commentaire as c where c.note >= :note");
+        idProduit.setParameter("note",note);
+        List<Integer> id = idProduit.list();
+        Query<Produit> produitQuery = session.createQuery("from Produit where id in :ids");
+        produitQuery.setParameter("ids",id);
         return produitQuery.list();
     }
 }

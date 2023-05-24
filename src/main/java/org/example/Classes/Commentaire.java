@@ -13,8 +13,8 @@ public class Commentaire {
     private Date date;
     private int note;
 
-    @ManyToOne
-    @JoinColumn(name = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "produit_id")
     private Produit produit;
 
     public Commentaire(String contenu, Date date, int note) {

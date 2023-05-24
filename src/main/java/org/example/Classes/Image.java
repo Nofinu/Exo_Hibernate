@@ -10,7 +10,7 @@ public class Image {
     private String url;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "produit_id")
     private Produit produit;
 
     public Image(String url) {

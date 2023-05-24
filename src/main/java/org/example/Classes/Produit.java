@@ -9,7 +9,7 @@ import java.util.List;
 public class Produit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int produit_id;
 
     private String marque;
     private String reference;
@@ -21,7 +21,7 @@ public class Produit {
     @OneToMany(mappedBy = "produit",fetch = FetchType.LAZY)
     private List<Image> images;
 
-    @OneToMany(mappedBy = "produit",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy ="produit",fetch = FetchType.EAGER)
     private List<Commentaire> commentaires;
 
     public Produit(String marque, String reference, Date dateAchat, Double prix, int stock) {
@@ -35,12 +35,12 @@ public class Produit {
     public Produit() {
     }
 
-    public int getId() {
-        return id;
+    public int getProduit_id() {
+        return produit_id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setProduit_id(int produit_id) {
+        this.produit_id = produit_id;
     }
 
     public String getMarque() {
@@ -120,7 +120,7 @@ public class Produit {
     @Override
     public String toString() {
         return "Produit{" +
-                "id=" + id +
+                "id=" + produit_id +
                 ", marque='" + marque + '\'' +
                 ", reference='" + reference + '\'' +
                 ", dateAchat=" + dateAchat +

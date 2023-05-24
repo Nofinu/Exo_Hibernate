@@ -156,7 +156,7 @@ public class IHM {
         scanner.nextLine();
 
         Produit produit = new Produit(brand,reference,new Date(date),price,stock);
-        produit.setId(id);
+        produit.setProduit_id(id);
 
         if(produitService.update(produit)){
             System.out.println("produit modifié");
@@ -288,12 +288,6 @@ public class IHM {
         int note = scanner.nextInt();
         scanner.nextLine();
         produitService.findBynote(note).forEach(System.out::println);
+        System.out.println();
     }
-/*
-    private void deletetest (){
-        System.out.println("id :");
-        int id =  scanner.nextInt();
-        Produit produit = produitService.findById(id);
-        produitService.delete2(produit);
-    }*/
 }
