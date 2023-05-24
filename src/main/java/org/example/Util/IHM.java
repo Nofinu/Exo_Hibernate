@@ -1,5 +1,7 @@
 package org.example.Util;
 
+import org.example.Classes.Commentaire;
+import org.example.Classes.Image;
 import org.example.Classes.Produit;
 import org.example.services.ProduitService;
 
@@ -61,6 +63,15 @@ public class IHM {
                 case 12:
                     findValueByBrandAction();
                     break;
+                case 13:
+                    addImageAction();
+                    break;
+                case 14:
+                    addCommentaireAction();
+                    break;
+                case 15:
+                    findByNoteAction();
+                    break;
                 case 0:
                     break;
                 default:
@@ -76,15 +87,21 @@ public class IHM {
         System.out.println("1-- ajouter un produit");
         System.out.println("2-- supprimer un produit");
         System.out.println("3-- editer un produit");
+        System.out.println("---------------------------");
         System.out.println("4-- afficher tout les produits");
         System.out.println("5-- afficher les produit supperieur a une somme");
         System.out.println("6-- afficher les produit entre 2 dates");
         System.out.println("7-- afficher l'id et la reference des produit au dessous d'un seuille de stock");
+        System.out.println("---------------------------");
         System.out.println("8-- stock par marque");
         System.out.println("9-- prix moyen des article");
         System.out.println("10-- liste d'article par marque");
         System.out.println("11-- suppresion par marque");
         System.out.println("12-- afficher le prix total du stock d'une marque");
+        System.out.println("---------------------------");
+        System.out.println("13-- ajouter une image a un produit");
+        System.out.println("14-- ajouter un commentaire a un produit");
+        System.out.println("15-- trouver des produit par rapport a leurs note");
     }
 
     private void addProductAction (){
@@ -176,10 +193,7 @@ public class IHM {
         int quantity = scanner.nextInt();
         scanner.nextLine();
 
-        List<Produit> produitList = produitService.findByQuantity(quantity);
-        for (Produit p: produitList) {
-            System.out.println("id : "+p.getId()+"/ reference : "+p.getReference());
-        }
+        produitService.findByQuantity(quantity).forEach(System.out::println);
     }
 
     private void stockByBrandAction (){
@@ -216,6 +230,64 @@ public class IHM {
         System.out.println("marque :");
         String brand = scanner.nextLine();
         System.out.println(produitService.findValueByBrand(brand));
+    }
+
+    private void addImageAction (){
+        System.out.println("---------- ajout d'une image a un produit ----------");
+        System.out.println("url de l'image :");
+        String url = scanner.nextLine();
+        System.out.println("id du produit :");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        Image image = new Image(url);
+        if(produitService.createImage(image)){
+            Produit produit = produitService.findById(id);
+            if(produit != null){
+                image.setProduit(produit);
+                produit.addImage(image);
+                if(produitService.update(produit)){
+                    System.out.println("image ajouté");
+                }else{
+                    System.out.println("erreure lors de l'ajout de l'image");
+                }
+            }
+        }
+    }
+
+    private void addCommentaireAction (){
+        System.out.println("---------- ajout d'un commentaire a un produit ----------");
+        System.out.println("contenu :");
+        String contenu = scanner.nextLine();
+        System.out.println("date (yyyy/MM/dd):");
+        String dateStr= scanner.nextLine();
+        System.out.println("note :");
+        int note = scanner.nextInt();
+        System.out.println("id du produit :");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        Commentaire commentaire = new Commentaire(contenu,new Date(dateStr),note);
+        if(produitService.createCommentaire(commentaire)){
+            Produit produit = produitService.findById(id);
+            if(produit != null){
+                commentaire.setProduit(produit);
+                produit.addCommentaire(commentaire);
+                if(produitService.update(produit)){
+                    System.out.println("commentaire ajouté");
+                }else{
+                    System.out.println("erreure lors de l'ajout du commentaire");
+                }
+            }
+        }
+    }
+
+    public void findByNoteAction(){
+        System.out.println("afficher les produit par rapport a leurs note");
+        System.out.println("note mini des produit");
+        int note = scanner.nextInt();
+        scanner.nextLine();
+        produitService.findBynote(note).forEach(System.out::println);
     }
 /*
     private void deletetest (){

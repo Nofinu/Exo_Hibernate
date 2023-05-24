@@ -1,11 +1,15 @@
 package org.example.services;
 
+import org.example.Classes.Commentaire;
+import org.example.Classes.Image;
 import org.example.Classes.Produit;
 import org.example.interfaces.Repository;
 import org.hibernate.query.Query;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 
 public class ProduitService extends BaseService implements Repository<Produit> {
@@ -27,6 +31,18 @@ public class ProduitService extends BaseService implements Repository<Produit> {
 
     @Override
     public boolean create(Produit o) {
+        session.beginTransaction();
+        session.save(o);
+        session.getTransaction().commit();
+        return true;
+    }
+    public boolean createImage(Image o) {
+        session.beginTransaction();
+        session.save(o);
+        session.getTransaction().commit();
+        return true;
+    }
+    public boolean createCommentaire(Commentaire o) {
         session.beginTransaction();
         session.save(o);
         session.getTransaction().commit();
@@ -62,7 +78,7 @@ public class ProduitService extends BaseService implements Repository<Produit> {
 
     @Override
     public Produit findById(int id) {
-        return (Produit) session.get(Produit.class, id);
+        return session.get(Produit.class, id);
     }
 
     @Override
@@ -83,10 +99,16 @@ public class ProduitService extends BaseService implements Repository<Produit> {
         return produitQuery.list();
     }
 
-    public List<Produit> findByQuantity(int quantity) {
-        Query<Produit> queryProduits = session.createQuery("from Produit where stock < :quantity", Produit.class);
-        queryProduits.setParameter("quantity", quantity);
-        return queryProduits.list();
+    public List<String> findByQuantity(int quantity) {
+        Query query = session.createQuery("select id,reference from Produit where stock < :quantity");
+        query.setParameter("quantity", quantity);
+        List produits = query.list();
+        List<String> result = new ArrayList<>();
+        for (Object o: produits) {
+            Object[] p= (Object[]) o;
+            result.add("id : "+p[0]+" / reference : "+p[1]);
+        }
+        return result;
     }
 
     public Long stockValueByBrand(String brand) {
@@ -117,5 +139,12 @@ public class ProduitService extends BaseService implements Repository<Produit> {
         Query<Double> queryStock = session.createQuery("select sum (stock*prix) from Produit as p where p.marque = :brand");
         queryStock.setParameter("brand", brand);
         return (Double) queryStock.uniqueResult();
+    }
+
+    public List<Produit> findBynote (int note){
+        System.out.println(note);
+        Query<Produit> produitQuery = session.createQuery("From Produit where Commentaire.note>= ?1", Produit.class);
+        produitQuery.setParameter(1,note);
+        return produitQuery.list();
     }
 }
