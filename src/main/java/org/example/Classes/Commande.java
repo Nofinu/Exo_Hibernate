@@ -1,6 +1,7 @@
 package org.example.Classes;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,10 +18,14 @@ public class Commande {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "commande_produit",joinColumns = @JoinColumn(name = "commande_id"),
             inverseJoinColumns = @JoinColumn(name = "produit_id"))
-    private List<Produit> produits;
+    private List<Produit> produits =new ArrayList<>();
 
     public Commande(Date dateCommande) {
         this.dateCommande = dateCommande;
+        this.total = 0D;
+    }
+
+    public Commande() {
     }
 
     public int getCommande_id() {
@@ -55,12 +60,22 @@ public class Commande {
         this.produits = produits;
     }
 
+    public boolean addProduit (Produit produit,int quantity){
+        if(produit != null && quantity>0 && quantity<= produit.getStock()){
+            this.produits.add(produit);
+            this.total += quantity*produit.getPrix();
+            return true;
+        }else {
+            return false;
+        }
+    }
+
     @Override
     public String toString() {
         return "Commande{" +
                 "commande_id=" + commande_id +
                 ", total=" + total +
-                ", dateCommande=" + dateCommande +
+                ", dateCommande=" + dateCommande +"\n"+
                 ", produits=" + produits +
                 '}';
     }

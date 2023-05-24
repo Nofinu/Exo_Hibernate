@@ -1,8 +1,10 @@
 package org.example.Util;
 
+import org.example.Classes.Commande;
 import org.example.Classes.Commentaire;
 import org.example.Classes.Image;
 import org.example.Classes.Produit;
+import org.example.services.CommandeService;
 import org.example.services.ProduitService;
 
 import java.util.Date;
@@ -11,12 +13,16 @@ import java.util.Scanner;
 
 public class IHM {
     private ProduitService produitService;
+    private CommandeService commandeService;
     private Scanner scanner;
 
     public IHM() {
         produitService = new ProduitService();
         produitService.begin();
+        commandeService = new CommandeService();
+        commandeService.begin();
         scanner = new Scanner(System.in);
+
     }
 
     public void start() {
@@ -72,6 +78,18 @@ public class IHM {
                 case 15:
                     findByNoteAction();
                     break;
+                case 16:
+                    addCommandeAction();
+                    break;
+                case 17 :
+                    addProduitToCommandeAction();
+                    break;
+                case 18:
+                    showAllCommandeAction();
+                    break;
+                case 19:
+                    showTodayCommandeAction();
+                    break;
                 case 0:
                     break;
                 default:
@@ -79,6 +97,7 @@ public class IHM {
                     break;
             }
         } while (entry != 0);
+        commandeService.end();
         produitService.end();
     }
 
@@ -102,6 +121,11 @@ public class IHM {
         System.out.println("13-- ajouter une image a un produit");
         System.out.println("14-- ajouter un commentaire a un produit");
         System.out.println("15-- trouver des produit par rapport a leurs note");
+        System.out.println("----------------------------");
+        System.out.println("16-- cree une commande");
+        System.out.println("17-- ajouter un produit a une commande");
+        System.out.println("18-- afficher toute les commande");
+        System.out.println("19-- afficher les commande du jour");
     }
 
     private void addProductAction (){
@@ -282,7 +306,7 @@ public class IHM {
         }
     }
 
-    public void findByNoteAction(){
+    private void findByNoteAction(){
         System.out.println("afficher les produit par rapport a leurs note");
         System.out.println("note mini des produit");
         int note = scanner.nextInt();
@@ -290,4 +314,58 @@ public class IHM {
         produitService.findBynote(note).forEach(System.out::println);
         System.out.println();
     }
+
+    private void addCommandeAction (){
+        System.out.println("---------- creation d'une commande -----------");
+        System.out.println("date de la commande (yyyy/MM/dd):");
+        String dateStr = scanner.nextLine();
+
+        Commande commande = new Commande(new Date(dateStr));
+        if(commandeService.create(commande)){
+            System.out.println("commande cree");
+        }else{
+            System.out.println("erreure lors de la creation de la commande");
+        }
+
+    }
+
+    private void addProduitToCommandeAction (){
+        System.out.println("------ ajouter un produit a une commande -------");
+        System.out.println("id de la commande :");
+        int idCommande = scanner.nextInt();
+        System.out.println("id du produit :");
+        int idProduit = scanner.nextInt();
+        System.out.println("quantité :");
+        int quantity = scanner.nextInt();
+        scanner.nextLine();
+
+        Commande commande = commandeService.findById(idCommande);
+        Produit produit = produitService.findById(idProduit);
+        if(commande != null && produit != null){
+            if(commande.addProduit(produit,quantity)){
+                if(commandeService.update(commande)){
+                    int stock = produit.getStock()-quantity;
+                    produit.setStock(stock);
+                    if(produitService.update(produit)){
+                        System.out.println("produit ajouté");
+                    }
+                }
+            }else{
+                System.out.println("quantité invalide");
+            }
+        }else {
+            System.out.println("erreure dans l'id produit ou l'id commande");
+        }
+    }
+
+    private void showAllCommandeAction () {
+        System.out.println("------ afficher toute les commande -------");
+        commandeService.findAll().forEach(System.out::println);
+    }
+
+    private void showTodayCommandeAction (){
+        System.out.println("------- afficher les commande du jour ------");
+        commandeService.findTodayCommande().forEach(System.out::println);
+    }
 }
+

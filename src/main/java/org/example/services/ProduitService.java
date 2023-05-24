@@ -135,4 +135,6 @@ public class ProduitService extends BaseService implements Repository<Produit> {
         produitQuery.setParameter("note",note);
         return produitQuery.list();
     }
+
+
 }
