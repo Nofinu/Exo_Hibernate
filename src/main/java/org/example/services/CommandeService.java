@@ -1,11 +1,11 @@
 package org.example.services;
 
+import org.example.Classes.Adresse;
 import org.example.Classes.Commande;
 import org.example.Classes.Produit;
 import org.example.interfaces.Repository;
 import org.hibernate.query.Query;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +22,12 @@ public class CommandeService extends BaseService implements Repository<Commande>
 
     @Override
     public boolean create(Commande o) {
+        session.beginTransaction();
+        session.save(o);
+        session.getTransaction().commit();
+        return true;
+    }
+    public boolean createAdresse(Adresse o) {
         session.beginTransaction();
         session.save(o);
         session.getTransaction().commit();

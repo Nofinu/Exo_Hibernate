@@ -8,5 +8,6 @@
     <mapping class="org.example.Classes.Image"/>
     <mapping class="org.example.Classes.Commentaire"/>
     <mapping class="org.example.Classes.Commande"/>
+    <mapping class="org.example.Classes.Adresse"/>
     </session-factory>
 </hibernate-configuration>

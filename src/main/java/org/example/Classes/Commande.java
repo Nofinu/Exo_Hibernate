@@ -16,9 +16,13 @@ public class Commande {
     private Date dateCommande;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "commande_produit",joinColumns = @JoinColumn(name = "commande_id"),
+    @JoinTable(name = "commande_produit", joinColumns = @JoinColumn(name = "commande_id"),
             inverseJoinColumns = @JoinColumn(name = "produit_id"))
-    private List<Produit> produits =new ArrayList<>();
+    private List<Produit> produits = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_adresse")
+    private Adresse adresse;
 
     public Commande(Date dateCommande) {
         this.dateCommande = dateCommande;
@@ -60,12 +64,20 @@ public class Commande {
         this.produits = produits;
     }
 
-    public boolean addProduit (Produit produit,int quantity){
-        if(produit != null && quantity>0 && quantity<= produit.getStock()){
+    public Adresse getAdresse() {
+        return adresse;
+    }
+
+    public void setAdresse(Adresse adresse) {
+        this.adresse = adresse;
+    }
+
+    public boolean addProduit(Produit produit, int quantity) {
+        if (produit != null && quantity > 0 && quantity <= produit.getStock()) {
             this.produits.add(produit);
-            this.total += quantity*produit.getPrix();
+            this.total += quantity * produit.getPrix();
             return true;
-        }else {
+        } else {
             return false;
         }
     }
@@ -75,8 +87,9 @@ public class Commande {
         return "Commande{" +
                 "commande_id=" + commande_id +
                 ", total=" + total +
-                ", dateCommande=" + dateCommande +"\n"+
-                ", produits=" + produits +
+                ", dateCommande=" + dateCommande + "\n" +
+                ", produits=" + produits + "\n" +
+                ",adress = " + adresse +
                 '}';
     }
 }

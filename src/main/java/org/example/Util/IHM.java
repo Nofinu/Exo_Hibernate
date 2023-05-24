@@ -1,9 +1,6 @@
 package org.example.Util;
 
-import org.example.Classes.Commande;
-import org.example.Classes.Commentaire;
-import org.example.Classes.Image;
-import org.example.Classes.Produit;
+import org.example.Classes.*;
 import org.example.services.CommandeService;
 import org.example.services.ProduitService;
 
@@ -90,6 +87,9 @@ public class IHM {
                 case 19:
                     showTodayCommandeAction();
                     break;
+                case 20 :
+                    addAdresseToCommande();
+                    break;
                 case 0:
                     break;
                 default:
@@ -126,6 +126,7 @@ public class IHM {
         System.out.println("17-- ajouter un produit a une commande");
         System.out.println("18-- afficher toute les commande");
         System.out.println("19-- afficher les commande du jour");
+        System.out.println("20-- ajouter une adresse a une commande");
     }
 
     private void addProductAction (){
@@ -366,6 +367,37 @@ public class IHM {
     private void showTodayCommandeAction (){
         System.out.println("------- afficher les commande du jour ------");
         commandeService.findTodayCommande().forEach(System.out::println);
+    }
+
+    private void addAdresseToCommande (){
+        System.out.println("------- ajouter une adresse a une commande -------");
+        System.out.println("rue :");
+        String rue = scanner.nextLine();
+        System.out.println("ville :");
+        String ville = scanner.nextLine();
+        System.out.println("code postal:");
+        int codePostal = scanner.nextInt();
+        System.out.println("id de la commande :");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        Adresse adresse = new Adresse(rue, ville, codePostal);
+        Commande commande = commandeService.findById(id);
+        if(commande != null){
+            if(commandeService.createAdresse(adresse)){
+                commande.setAdresse(adresse);
+                if(commandeService.update(commande)){
+                    System.out.println("adresse ajouter");
+                }else{
+                    System.out.println("erreure lors de l'ajout");
+                }
+            }else{
+                System.out.println("erreure lors de la creation de l'adresse");
+            }
+
+        }else{
+            System.out.println("id de la commande incorecte");
+        }
     }
 }
 
