@@ -131,11 +131,8 @@ public class ProduitService extends BaseService implements Repository<Produit> {
     }
 
     public List<Produit> findBynote (int note){
-        Query<Integer> idProduit = session.createQuery("select c.produit.id from Commentaire as c where c.note >= :note");
-        idProduit.setParameter("note",note);
-        List<Integer> id = idProduit.list();
-        Query<Produit> produitQuery = session.createQuery("from Produit where id in :ids");
-        produitQuery.setParameter("ids",id);
+        Query<Produit> produitQuery = session.createQuery("from Produit where id in (select c.produit.id from Commentaire as c where c.note >= :note)", Produit.class);
+        produitQuery.setParameter("note",note);
         return produitQuery.list();
     }
 }
